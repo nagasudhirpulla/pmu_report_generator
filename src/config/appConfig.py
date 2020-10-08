@@ -19,7 +19,7 @@ def getConfig(configFilename='config.xlsx', sheetName='config') -> IAppConfig:
     """
     df = pd.read_excel(configFilename, sheet_name=sheetName,
                        header=None, index_col=0)
-    configDict = df[1].to_dict()
+    configDict: IAppConfig = df[1].to_dict()
     return configDict
 
 

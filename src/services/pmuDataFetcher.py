@@ -14,15 +14,16 @@ from src.utils.timeUtils import convertEpochMsToDt
 
 
 class PmuDataFetcher():
-    def __init__(self, host: str, port: int, path: str, username: str, password: str, refMeasId: int):
+    def __init__(self, host: str, port: int, path: str, username: str, password: str, refMeasId: int, dataRate: int = 25):
         self.host = host
         self.port = port
         self.path = path
         self.username = username
         self.password = password
         self.refMeasId = refMeasId
+        self.dataRate = dataRate
 
-    def fetchPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime, dataRate: int = 25) -> List[List[Union[dt.datetime, float]]]:
+    def fetchPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> List[List[Union[dt.datetime, float]]]:
         command = "./PMUDataAdapter.exe"
         args = [command]
         args.extend(["--meas_id", str(pntId)])
@@ -36,7 +37,7 @@ class PmuDataFetcher():
         args.extend(["--username", self.username])
         args.extend(["--password", self.password])
         args.extend(["--ref_meas_id", str(self.refMeasId)])
-        args.extend(["--data_rate", str(dataRate)])
+        args.extend(["--data_rate", str(self.dataRate)])
         proc = Popen(args, stdout=PIPE)
         try:
             outs, errs = proc.communicate()
