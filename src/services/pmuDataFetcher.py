@@ -10,9 +10,9 @@ will give
 from subprocess import Popen, PIPE
 import datetime as dt
 from typing import List, Union
-from src.utils.timeUtils import convertEpochMsToDt
+from src.utils.timeUtils import convertEpochMsToDt, getSampleTimestamps
 import pandas as pd
-
+from src.typeDefs.fetchPnt import FetchPnt
 
 class PmuDataFetcher():
     def __init__(self, host: str, port: int, path: str, username: str, password: str, refMeasId: int, dataRate: int = 25):
@@ -113,7 +113,7 @@ class PmuDataFetcher():
         # if window width is 0, send start and end times without splitting
         if fetchWindow.total_seconds == 0:
             return [[startTime, endTime]]
-        
+
         winStartTime = startTime
         winEndTime = winStartTime + fetchWindow
         while winEndTime <= endTime:
@@ -141,3 +141,16 @@ class PmuDataFetcher():
             # append data to the result series
             resData = resData.append(data)
         return resData
+
+    def fetchPntsData(self, pnts: List[FetchPnt], startTime: dt.datetime, endTime: dt.datetime, fetchWindow: dt.timedelta, resampleFreq: str, aggStrategy: str) -> pd.DataFrame:
+        # initialize result dataframe with ideal index
+        idealTimestamps = getSampleTimestamps(startTime, endTime, resampleFreq)
+        resDf = pd.DataFrame(index=idealTimestamps)
+        # iterate through all the points and populate the result dataframe
+        for pnt in pnts:
+            pntId: int = pnt['id']
+            pntName: int = pnt['name']
+            pntData = self.fetchPntData(
+                pntId, startTime, endTime, fetchWindow, resampleFreq, aggStrategy)
+            resDf['{0}|{1}'.format(pntId, pntName)] = pntData
+        return resDf
