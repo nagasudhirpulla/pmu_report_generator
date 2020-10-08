@@ -1,7 +1,8 @@
-from src.config.appConfig import getConfig
+from src.config.appConfig import getConfig, getFetchPnts
 from src.services.pmuDataFetcher import PmuDataFetcher
 
 appConfig = getConfig()
+fetchPnts = getFetchPnts()
 
 fetcher = PmuDataFetcher(appConfig['host'], appConfig['port'], appConfig['path'],
                          appConfig['username'], appConfig['password'], appConfig['refMeasId'])

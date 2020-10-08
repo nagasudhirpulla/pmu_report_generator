@@ -2,7 +2,7 @@ PMUDataAdapter.exe
 data/
 project_env/
 node_modules/
-config.json
+config.xlsx
 __pycache__
 *.py[cod]
 *$py.class
