@@ -29,5 +29,5 @@ class IAppConfig(TypedDict):
     fetchWindowMinutes: float
     fetchWindowSeconds: float
     sampleAggregationStrategy: str
-    resampleFrequency: float
+    resampleFrequency: str
     filenamePrefix: str

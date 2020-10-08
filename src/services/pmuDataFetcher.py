@@ -11,6 +11,7 @@ from subprocess import Popen, PIPE
 import datetime as dt
 from typing import List, Union
 from src.utils.timeUtils import convertEpochMsToDt
+import pandas as pd
 
 
 class PmuDataFetcher():
@@ -23,7 +24,7 @@ class PmuDataFetcher():
         self.refMeasId = refMeasId
         self.dataRate = dataRate
 
-    def fetchPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> List[List[Union[dt.datetime, float]]]:
+    def __fetchRawPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> pd.Series:
         command = "./PMUDataAdapter.exe"
         args = [command]
         args.extend(["--meas_id", str(pntId)])
@@ -47,13 +48,59 @@ class PmuDataFetcher():
         resp = outs.decode("utf-8")
         # split the response by comma
         respSegs: List[str] = resp.split(',')
-        data: List[List[Union[dt.datetime, float]]] = []
+        timestamps: List[dt.datetime] = []
+        vals: List[float] = []
         try:
             for samplInd in range(0, int(len(respSegs)/2)):
                 ts = convertEpochMsToDt(float(respSegs[2*samplInd]))
                 val = float(respSegs[2*samplInd+1])
-                data.append([ts, val])
+                timestamps.append(ts)
+                vals.append(val)
+            data = pd.Series(vals, index=timestamps)
             return data
         except Exception as inst:
             print(inst)
-            return []
+            return pd.Series()
+
+    def __resampleData(data: pd.Series, resampleFreq: str, aggStrategy: str) -> pd.Series:
+        if pd.isna(resampleFreq):
+            return data
+        if not (resampleFreq.lower() in ['s', 'm', 'b', 'h', 'd']):
+            return data
+        if pd.isna(aggStrategy) or (aggStrategy.lower() == 'raw'):
+            return data
+
+        # storing series labels
+        seriesName = data.name
+        indName = data.index.name
+
+        # changing series labels
+        data.name = 'vals'
+        data.index.name = 'times'
+        data = data.reset_index()
+        # modify times as per resampleFreq
+        # https://stackoverflow.com/questions/43400331/remove-seconds-and-minutes-from-a-pandas-dataframe-column
+        if resampleFreq.lower() == 'd':
+            data = data.assign(times=data.times.dt.round('D'))
+        elif resampleFreq.lower() == 'h':
+            data = data.assign(times=data.times.dt.round('H'))
+        elif resampleFreq.lower() == 'm':
+            data = data.assign(times=data.times.dt.round('min'))
+        elif resampleFreq.lower() == 's':
+            data = data.assign(times=data.times.dt.round('S'))
+        elif resampleFreq.lower() == 'b':
+            data = data.assign(times=data.times.dt.round('min'))
+            data.times = data.times.map(
+                lambda x: x.replace(minute=(x.minute - x.minute % 15)))
+
+        # aggregate the samples based on times
+        if aggStrategy.lower() == 'snap':
+            data = data.groupby('times', as_index=False).first()
+        elif aggStrategy.lower() == 'average':
+            data = data.groupby('times', as_index=False).mean()
+        data = pd.Series(data.vals, index=data.times)
+
+        # restore original labels
+        data.name = seriesName
+        data.index.name = indName
+        return data
