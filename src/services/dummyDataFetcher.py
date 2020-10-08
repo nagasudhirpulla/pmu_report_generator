@@ -1,23 +1,28 @@
-# -*- coding: utf-8 -*-
-"""
-Using Popen to communicate with exe file
-https://docs.python.org/3.4/library/subprocess.html#subprocess.Popen.communicate
-use shlex to parse command string if required
-shlex.split(/bin/vikings -input eggs.txt -output "spam spam.txt" -cmd "echo '$MONEY'")
-will give
-['/bin/vikings', '-input', 'eggs.txt', '-output', 'spam spam.txt', '-cmd', "echo '$MONEY'"]
-"""
-from subprocess import Popen, PIPE
 import datetime as dt
-from typing import List, Union
-from src.utils.timeUtils import convertEpochMsToDt
+from typing import List
+import pandas as pd
+import random
 
 
 class DummyDataFetcher():
-    def fetchPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> List[List[Union[dt.datetime, float]]]:
+    def fetchData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime, resampleFreq: str) -> pd.Series:
         currTime = startTime
-        resData: List[List[Union[dt.datetime, float]]] = []
+        sampleDelta = dt.timedelta(microseconds=40000)
+        if not pd.isna(resampleFreq):
+            if resampleFreq.lower() == 's':
+                sampleDelta = dt.timedelta(seconds=1)
+            elif resampleFreq.lower() == 'm':
+                sampleDelta = dt.timedelta(minutes=1)
+            elif resampleFreq.lower() == 'b':
+                sampleDelta = dt.timedelta(minutes=15)
+            elif resampleFreq.lower() == 'h':
+                sampleDelta = dt.timedelta(hours=1)
+            elif resampleFreq.lower() == 'd':
+                sampleDelta = dt.timedelta(days=1)
+        inds: List[dt.datetime] = []
+        vals: List[float] = []
         while currTime <= endTime:
-            resData.append([currTime, 0.5])
-            currTime = currTime + dt.timedelta(microseconds=40000)
-        return resData
+            inds.append(currTime)
+            vals.append(random.random())
+            currTime = currTime + sampleDelta
+        return pd.Series(vals, index=inds)

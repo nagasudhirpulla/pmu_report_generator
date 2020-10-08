@@ -62,7 +62,7 @@ class PmuDataFetcher():
             print(inst)
             return pd.Series()
 
-    def __resampleData(data: pd.Series, resampleFreq: str, aggStrategy: str) -> pd.Series:
+    def __resampleData(self, data: pd.Series, resampleFreq: str, aggStrategy: str) -> pd.Series:
         if pd.isna(resampleFreq):
             return data
         if not (resampleFreq.lower() in ['s', 'm', 'b', 'h', 'd']):
@@ -104,3 +104,40 @@ class PmuDataFetcher():
         data.name = seriesName
         data.index.name = indName
         return data
+
+    def __getFetchWindows(self, startTime: dt.datetime, endTime: dt.datetime, fetchWindow: dt.timedelta) -> List[List[dt.datetime]]:
+        resWindows: List[List[dt.datetime]] = []
+        # check if start time is greater than end time
+        if startTime > endTime:
+            return resWindows
+        # if window width is 0, send start and end times without splitting
+        if fetchWindow.total_seconds == 0:
+            return [[startTime, endTime]]
+        
+        winStartTime = startTime
+        winEndTime = winStartTime + fetchWindow
+        while winEndTime <= endTime:
+            if winEndTime == endTime:
+                resWindows.append([winStartTime, winEndTime])
+            else:
+                sampleDelta = dt.timedelta(microseconds=40000)
+                resWindows.append([winStartTime, winEndTime-sampleDelta])
+            winStartTime = winEndTime
+            winEndTime = winEndTime + fetchWindow
+        return resWindows
+
+    def fetchPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime, fetchWindow: dt.timedelta, resampleFreq: str, aggStrategy: str) -> pd.Series:
+        # initialize empty pandas series
+        resData = pd.Series()
+        # get fetch windows
+        fetchWins: List[List[dt.datetime]] = self.__getFetchWindows(
+            startTime, endTime, fetchWindow)
+        # iterate through fetch windows for fetching data
+        for fetchWin in fetchWins:
+            # fetch raw data
+            data = self.__fetchRawPmuData(pntId, fetchWin[0], fetchWin[1])
+            # resample raw data
+            data = self.__resampleData(data, resampleFreq, aggStrategy)
+            # append data to the result series
+            resData = resData.append(data)
+        return resData
