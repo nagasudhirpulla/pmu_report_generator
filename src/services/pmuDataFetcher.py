@@ -24,7 +24,7 @@ class PmuDataFetcher():
         self.refMeasId = refMeasId
         self.dataRate = dataRate
 
-    def __fetchRawPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> pd.Series:
+    def __fetchRawPntData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> pd.Series:
         command = "./PMUDataAdapter.exe"
         args = [command]
         args.extend(["--meas_id", str(pntId)])
@@ -126,7 +126,7 @@ class PmuDataFetcher():
             winEndTime = winEndTime + fetchWindow
         return resWindows
 
-    def fetchPmuData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime, fetchWindow: dt.timedelta, resampleFreq: str, aggStrategy: str) -> pd.Series:
+    def fetchPntData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime, fetchWindow: dt.timedelta, resampleFreq: str, aggStrategy: str) -> pd.Series:
         # initialize empty pandas series
         resData = pd.Series()
         # get fetch windows
@@ -135,7 +135,7 @@ class PmuDataFetcher():
         # iterate through fetch windows for fetching data
         for fetchWin in fetchWins:
             # fetch raw data
-            data = self.__fetchRawPmuData(pntId, fetchWin[0], fetchWin[1])
+            data = self.__fetchRawPntData(pntId, fetchWin[0], fetchWin[1])
             # resample raw data
             data = self.__resampleData(data, resampleFreq, aggStrategy)
             # append data to the result series
