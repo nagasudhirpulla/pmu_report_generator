@@ -64,6 +64,8 @@ class PmuDataFetcher():
             return pd.Series()
 
     def __resampleData(self, data: pd.Series, resampleFreq: str, aggStrategy: str) -> pd.Series:
+        if len(data) == 0:
+            return data
         if pd.isna(resampleFreq):
             return data
         if not (resampleFreq.lower() in ['s', 'm', 'b', 'h', 'd']):
