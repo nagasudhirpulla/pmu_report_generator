@@ -79,4 +79,4 @@ If fetch window is 0, or more than (endTime-startTime), then data will not be fe
 * The dynamic start time and end time configuration provides peridic data dumping capability to this script
 
 ## Snapshot of a sample output
-![snapshot of sample output](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/sample_output)
+![snapshot of sample output](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/sample_output.png)
