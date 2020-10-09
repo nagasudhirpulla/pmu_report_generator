@@ -14,6 +14,7 @@ from src.utils.timeUtils import convertEpochMsToDt, getSampleTimestamps
 import pandas as pd
 from src.typeDefs.fetchPnt import FetchPnt
 
+
 class PmuDataFetcher():
     def __init__(self, host: str, port: int, path: str, username: str, password: str, refMeasId: int, dataRate: int = 25):
         self.host = host
@@ -110,8 +111,8 @@ class PmuDataFetcher():
         # check if start time is greater than end time
         if startTime > endTime:
             return resWindows
-        # if window width is 0, send start and end times without splitting
-        if fetchWindow.total_seconds == 0:
+        # if window width is 0, or window length is more, send start and end times without splitting
+        if (fetchWindow.total_seconds == 0) or (fetchWindow >= (endTime-startTime)):
             return [[startTime, endTime]]
 
         winStartTime = startTime
