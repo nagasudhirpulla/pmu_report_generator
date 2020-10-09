@@ -9,7 +9,7 @@ class IAppConfig(TypedDict):
     password: str
     refMeasId: int
     dumpFolder: str
-    dummyFetch: str
+    dummyFetchFlag: str
     absoluteStartTime: dt.datetime
     varStartYears: float
     varStartMonths: float

@@ -19,6 +19,7 @@ class DummyDataFetcher():
         # initialize result dataframe with ideal index
         idealTimestamps = getSampleTimestamps(startTime, endTime, resampleFreq)
         resDf = pd.DataFrame(index=idealTimestamps)
+        resDf.index.name = 'Timestamp'
         # iterate through all the points and populate the result dataframe
         for pnt in pnts:
             pntId: int = pnt['id']
