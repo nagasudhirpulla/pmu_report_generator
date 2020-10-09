@@ -1,7 +1,9 @@
 from typing import TypedDict
 import datetime as dt
 
+
 class IAppConfig(TypedDict):
+    dummyFetchFlag: str
     host: str
     port: int
     path: str
@@ -9,7 +11,7 @@ class IAppConfig(TypedDict):
     password: str
     refMeasId: int
     dumpFolder: str
-    dummyFetchFlag: str
+    filenamePrefix: str
     absoluteStartTime: dt.datetime
     varStartYears: float
     varStartMonths: float
@@ -28,6 +30,5 @@ class IAppConfig(TypedDict):
     fetchWindowHours: float
     fetchWindowMinutes: float
     fetchWindowSeconds: float
-    sampleAggregationStrategy: str
     resampleFrequency: str
-    filenamePrefix: str
+    sampleAggregationStrategy: str
