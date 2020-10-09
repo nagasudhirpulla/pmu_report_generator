@@ -87,4 +87,4 @@ If fetch window is 0, or more than (endTime-startTime), then data will not be fe
 ![snapshot of sample output](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/sample_output.png)
 
 ## Snapshot of a points configuration sheet
-![points configuration sheet](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/pnts_config.png)
+![points configuration sheet](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/pnts_config.PNG)
