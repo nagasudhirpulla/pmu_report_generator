@@ -14,8 +14,13 @@ This is a python script that fetches data of user defined points from the PMU hi
 * you can see the outut report generated in the user configured dump folder
 
 ## Configuration
+
+### Configuring the points to be fetched
+The list of points to be fetched can be defined in the 'pnts' sheet of 'config.xlsx' file
+
 ### API fetch configuration
-This configuration is defined in the config sheet of config.xlsx file
+This configuration is defined in the 'config' sheet of 'config.xlsx' file
+
 The description of configuration parameters is as follows
 * dummyFetchFlag: If its value is 1, dummy data will be dumped
 * host: ip address of api host (example: '10.5.10.6')
@@ -26,12 +31,12 @@ The description of configuration parameters is as follows
 * refMeasId: reference measurement id for data fetch (example: 100)
 
 ### Dumping configuration
-This configuration is defined in the config sheet of config.xlsx file
+This configuration is defined in the 'config' sheet of 'config.xlsx' file
 * dumpFolder: folder path at which the report is to be dumped (example: 'D:\dumps\pmudata')
 * filenamePrefix: prefix of the report filename (example: 'pmu_report_')
 
 ### Data fetch start and end times configuration
-This configuration is defined in the config sheet of config.xlsx file
+This configuration is defined in the 'config' sheet of 'config.xlsx' file
 * absoluteStartTime: Date time of start time
 * varStartYears: if this value is non-empty the years component of start time will be dynamic (example: -1)
 * varStartMonths: if this value is non-empty the months component of start time will be dynamic (example: -1)
@@ -48,7 +53,7 @@ This configuration is defined in the config sheet of config.xlsx file
 * varEndSeconds: if this value is non-empty the seconds component of end time will be dynamic (example: -1)
 
 ### data resampling configuration
-This configuration is defined in the config sheet of config.xlsx file
+This configuration is defined in the 'config' sheet of 'config.xlsx' file
 
 Data from API contains 25 samples in 1 second duration. We can resample data using the following configuration
 * resampleFrequency: any one of the below options can be used
@@ -64,7 +69,7 @@ Data from API contains 25 samples in 1 second duration. We can resample data usi
     * 'average' - average of valid samples of the resampling window will be taken for data aggregation
 
 ### fetch window configuration
-This configuration is defined in the config sheet of config.xlsx file
+This configuration is defined in the 'config' sheet of 'config.xlsx' file
 
 You can fetch data in time windows using the below configuration
 * fetchWindowDays: (example: 1)
@@ -80,3 +85,6 @@ If fetch window is 0, or more than (endTime-startTime), then data will not be fe
 
 ## Snapshot of a sample output
 ![snapshot of sample output](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/sample_output.png)
+
+## Snapshot of a points configuration sheet
+![points configuration sheet](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/pnts_config.png)
