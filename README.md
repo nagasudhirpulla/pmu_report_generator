@@ -30,7 +30,7 @@ This configuration is defined in the config sheet of config.xlsx file
 * dumpFolder: folder path at which the report is to be dumped (example: 'D:\dumps\pmudata')
 * filenamePrefix: prefix of the report filename (example: 'pmu_report_')
 
-## Data fetch start and end times configuration
+### Data fetch start and end times configuration
 This configuration is defined in the config sheet of config.xlsx file
 * absoluteStartTime: Date time of start time
 * varStartYears: if this value is non-empty the years component of start time will be dynamic (example: -1)
@@ -47,7 +47,7 @@ This configuration is defined in the config sheet of config.xlsx file
 * varEndMinutes: if this value is non-empty the minutes component of end time will be dynamic (example: -1)
 * varEndSeconds: if this value is non-empty the seconds component of end time will be dynamic (example: -1)
 
-## data resampling configuration
+### data resampling configuration
 This configuration is defined in the config sheet of config.xlsx file
 
 Data from API contains 25 samples in 1 second duration. We can resample data using the following configuration
@@ -63,7 +63,7 @@ Data from API contains 25 samples in 1 second duration. We can resample data usi
     * 'snap' - first valid sample of the resampling window will be taken for data aggregation
     * 'average' - average of valid samples of the resampling window will be taken for data aggregation
 
-## fetch window configuration
+### fetch window configuration
 This configuration is defined in the config sheet of config.xlsx file
 
 You can fetch data in time windows using the below configuration
@@ -77,3 +77,6 @@ If fetch window is 0, or more than (endTime-startTime), then data will not be fe
 * If data of some signals / all signals is completely absent / intermittent, the script will not crash, instead missing samples will be dumped as empty cells in the output report. Hence the data of all signals is time aligned even if data is completely / partially unavailable
 * Only 'GOOD' quality data is dumped in the report. Other quality data is dumped as blank cells in the output report
 * The dynamic start time and end time configuration provides peridic data dumping capability to this script
+
+## Snapshot of a sample output
+![snapshot of sample output](https://github.com/nagasudhirpulla/pmu_report_generator/raw/master/assets/sample_output)
