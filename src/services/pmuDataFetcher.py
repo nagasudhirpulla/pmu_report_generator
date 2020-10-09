@@ -117,8 +117,8 @@ class PmuDataFetcher():
 
         winStartTime = startTime
         winEndTime = winStartTime + fetchWindow
-        while winEndTime <= endTime:
-            if winEndTime == endTime:
+        while winStartTime <= endTime:
+            if winEndTime >= endTime:
                 resWindows.append([winStartTime, winEndTime])
             else:
                 sampleDelta = dt.timedelta(microseconds=40000)
