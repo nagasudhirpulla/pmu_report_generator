@@ -82,15 +82,15 @@ class PmuDataFetcher():
         # modify times as per resampleFreq
         # https://stackoverflow.com/questions/43400331/remove-seconds-and-minutes-from-a-pandas-dataframe-column
         if resampleFreq.lower() == 'd':
-            data = data.assign(times=data.times.dt.round('D'))
+            data = data.assign(times=data.times.dt.floor('D'))
         elif resampleFreq.lower() == 'h':
-            data = data.assign(times=data.times.dt.round('H'))
+            data = data.assign(times=data.times.dt.floor('H'))
         elif resampleFreq.lower() == 'm':
-            data = data.assign(times=data.times.dt.round('min'))
+            data = data.assign(times=data.times.dt.floor('min'))
         elif resampleFreq.lower() == 's':
-            data = data.assign(times=data.times.dt.round('S'))
+            data = data.assign(times=data.times.dt.floor('S'))
         elif resampleFreq.lower() == 'b':
-            data = data.assign(times=data.times.dt.round('min'))
+            data = data.assign(times=data.times.dt.floor('min'))
             data.times = data.times.map(
                 lambda x: x.replace(minute=(x.minute - x.minute % 15)))
 
@@ -99,7 +99,7 @@ class PmuDataFetcher():
             data = data.groupby('times', as_index=False).first()
         elif aggStrategy.lower() == 'average':
             data = data.groupby('times', as_index=False).mean()
-        data = pd.Series(data.vals, index=data.times)
+        data = pd.Series(data.vals.values, index=data.times.values)
 
         # restore original labels
         data.name = seriesName
