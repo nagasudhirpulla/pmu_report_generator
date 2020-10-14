@@ -6,8 +6,24 @@ from src.utils.variableTime import VariableTime
 import datetime as dt
 import pandas as pd
 import os
+import argparse
 
-appConfig = getConfig()
+# get an instance of argument parser from argparse module
+parser = argparse.ArgumentParser()
+# setup config file path input argument
+configPath = 'config.xlsx'
+configSheet = 'config'
+parser.add_argument('--configPath', help="Enter path for config file",
+                    default=configPath)
+parser.add_argument('--configSheet', help="Enter path for config file",
+                    default=configSheet)
+# get the dictionary of command line inputs entered by the user
+args = parser.parse_args()
+# access each command line input from the dictionary
+configPath = args.configPath
+configSheet = args.configSheet
+
+appConfig = getConfig(configFilename=configPath, sheetName=configSheet)
 pnts = getFetchPnts()
 
 startVarTime = VariableTime(appConfig["varStartYears"], appConfig["varStartMonths"], appConfig["varStartDays"],
