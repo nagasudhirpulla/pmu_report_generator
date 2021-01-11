@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser()
 # setup config file path input argument
 configPath = 'config.xlsx'
 configSheet = 'config'
+pntsSheet = 'pnts'
 parser.add_argument('--configPath', help="Enter path for config file",
                     default=configPath)
 parser.add_argument('--configSheet', help="Enter path for config file",
@@ -24,7 +25,7 @@ configPath = args.configPath
 configSheet = args.configSheet
 
 appConfig = getConfig(configFilename=configPath, sheetName=configSheet)
-pnts = getFetchPnts()
+pnts = getFetchPnts(configFilename=configPath, sheetName=pntsSheet)
 
 startVarTime = VariableTime(appConfig["varStartYears"], appConfig["varStartMonths"], appConfig["varStartDays"],
                             appConfig["varStartHours"], appConfig["varStartMinutes"], appConfig["varStartSeconds"], appConfig["absoluteStartTime"])
