@@ -49,7 +49,7 @@ if isDummyFetch:
     resDf = fetcher.fetchPntsData(pnts, startTime, endTime, resampleFreq)
 else:
     fetcher = PmuDataFetcher(appConfig["host"], appConfig["port"], appConfig["path"],
-                             appConfig["username"], appConfig["password"], appConfig["refMeasId"])
+                             appConfig["username"], appConfig["password"], appConfig["refMeasId"], adapterExePath=appConfig.get("adapterExePath", "./PMUDataAdapter.exe"))
     resDf = fetcher.fetchPntsData(
         pnts, startTime, endTime, fetchWindow, resampleFreq, aggStrategy)
 

@@ -16,7 +16,7 @@ from src.typeDefs.fetchPnt import FetchPnt
 
 
 class PmuDataFetcher():
-    def __init__(self, host: str, port: int, path: str, username: str, password: str, refMeasId: int, dataRate: int = 25):
+    def __init__(self, host: str, port: int, path: str, username: str, password: str, refMeasId: int, dataRate: int = 25, adapterExePath: str = "./PMUDataAdapter.exe"):
         self.host = host
         self.port = port
         self.path = path
@@ -24,9 +24,10 @@ class PmuDataFetcher():
         self.password = password
         self.refMeasId = refMeasId
         self.dataRate = dataRate
+        self.adapterExePath = adapterExePath
 
     def __fetchRawPntData(self, pntId: int, startTime: dt.datetime, endTime: dt.datetime) -> pd.Series:
-        command = "./PMUDataAdapter.exe"
+        command = self.adapterExePath
         args = [command]
         args.extend(["--meas_id", str(pntId)])
         args.extend(

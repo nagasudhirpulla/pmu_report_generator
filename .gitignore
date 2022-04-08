@@ -1,5 +1,6 @@
 PMUDataAdapter.exe
 data/
+build/
 project_env/
 node_modules/
 config.xlsx
